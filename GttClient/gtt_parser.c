@@ -1,11 +1,18 @@
+// Print debugging messages
+#define DEBUG_PSOC 0
+
 #include <gtt_parser.h>
 #include <gtt_device.h>
 #include <stdio.h>
 #include "gtt_protocol.h"
 #include "gtt_events.h"
+
+#ifdef DEBUG_PSOC
 #include <project.h>
 #include <stdio.h>
 char buff[128];
+#endif
+
 
 uint8_t gtt_process_packet(gtt_device *device, size_t packetstart)
 {
@@ -102,6 +109,8 @@ void gtt_out_of_bounds(gtt_device* device, uint8_t data)
 }
 
 #if 0
+// The original Matrix Orbital Byte Based Parser
+    
 uint8_t gtt_parser_process(gtt_device *device)
 {
 	int Res = device->Read(device);
@@ -162,7 +171,8 @@ uint8_t gtt_parser_process(gtt_device *device)
 }
 
 #else
-    
+
+// This function process a whole packet at a time    
 uint8_t gtt_parser_process(gtt_device *device)
 {
     
@@ -175,8 +185,10 @@ uint8_t gtt_parser_process(gtt_device *device)
     
     if(rval != GTT_PACKET_OK)
     {
+#if DEBUG_PSOC        
         sprintf(buff,"GTT_PACKET_ERROR %d\r\n",rval);
         UART_UartPutString(buff);
+#endif
         return 0; // No data
     }
 
