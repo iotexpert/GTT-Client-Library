@@ -1,5 +1,5 @@
 // Print debugging messages
-#define DEBUG_PSOC 0
+#define DEBUG_PSOC 1
 
 #include <gtt_parser.h>
 #include <gtt_device.h>
@@ -7,7 +7,7 @@
 #include "gtt_protocol.h"
 #include "gtt_events.h"
 
-#ifdef DEBUG_PSOC
+#if DEBUG_PSOC
 #include <project.h>
 #include <stdio.h>
 char buff[128];
@@ -108,7 +108,7 @@ void gtt_out_of_bounds(gtt_device* device, uint8_t data)
     CYASSERT(0);
 }
 
-#if 0
+#ifdef GTT_ORIG_PARSER
 // The original Matrix Orbital Byte Based Parser
     
 uint8_t gtt_parser_process(gtt_device *device)
