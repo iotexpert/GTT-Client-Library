@@ -1,5 +1,5 @@
 // Print debugging messages
-#define DEBUG_PSOC 1
+
 
 #include <gtt_parser.h>
 #include <gtt_device.h>
@@ -105,7 +105,9 @@ void gtt_out_of_bounds(gtt_device* device, uint8_t data)
 {
     (void)device;
     (void)data;
-    CYASSERT(0);
+    #if DEBUG_PSOC
+        CYASSERT(0);
+    #endif
 }
 
 #ifdef GTT_ORIG_PARSER
@@ -175,11 +177,8 @@ uint8_t gtt_parser_process(gtt_device *device)
 // This function process a whole packet at a time    
 uint8_t gtt_parser_process(gtt_device *device)
 {
-    
     gtt_packet_error_t rval;
-    
     rval = device->ReadPacket(device);
-    
     if(rval == GTT_PACKET_NODATA)
         return 0;
     
@@ -235,7 +234,7 @@ size_t gtt_parser_waitpacket_250(gtt_device *device, uint16_t commandID)
 }
 
 // ARH - changed the way bytes were built up to fix alignment bug
-#if 0
+#if 1
 
 #define swap32(a)                    \
 	((((a) >> 24) & 0x000000ff) | \
@@ -259,19 +258,20 @@ uint32_t gtt_parser_getU32(gtt_device* device, size_t index, size_t *outIndex)
 
 uint16_t gtt_parser_getU16(gtt_device* device, size_t index, size_t *outIndex)
 {
-    
+
     uint16_t data = (device->rx_buffer[index]<<8 | device->rx_buffer[index+1]);	
 	*outIndex = index + 2;
     return data;
-}
+ }
 
 
 int16_t gtt_parser_getS16(gtt_device* device, size_t index, size_t *outIndex)
 {
-    int16_t data = (device->rx_buffer[index]<<8 | device->rx_buffer[index+1]);
-	    
+    
+    int16_t data = (device->rx_buffer[index]<<8 | device->rx_buffer[index+1]);	    
 	*outIndex = index + 2;
     return data;
+  
 }
 
 
